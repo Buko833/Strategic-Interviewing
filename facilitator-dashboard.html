@@ -1,9 +1,473 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Facilitator Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facilitator Dashboard - Training Sessions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #43b02a 0%, #2d7a1f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #43b02a;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #2d7a1f;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: #43b02a;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #2d7a1f;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #f44336;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            color: #2d7a1f;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .session-code {
+            background: #43b02a;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            margin: 20px 0;
+        }
+
+        .session-list {
+            list-style: none;
+        }
+
+        .session-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #43b02a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .session-info h3 {
+            color: #2d7a1f;
+            margin-bottom: 5px;
+        }
+
+        .session-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .session-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .status-waiting {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-completed {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .participant-count {
+            background: #e8f5e9;
+            color: #2d7a1f;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-left: 15px;
+        }
+
+        .qr-container {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        #qrcode {
+            margin: 20px auto;
+            display: inline-block;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .session-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .session-actions {
+                margin-top: 15px;
+                width: 100%;
+            }
+
+            .session-actions button {
+                flex: 1;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Facilitator Dashboard</h1>
-    <p>Current Date and Time (UTC): 2026-02-27 01:57:20</p>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Training Session Dashboard</h1>
+            <p>Create and manage evidence-based interviewing training sessions</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            Session created successfully!
+        </div>
+
+        <div class="grid-2">
+            <!-- Create New Session -->
+            <div class="card">
+                <h2>Create New Session</h2>
+                
+                <div class="input-group">
+                    <label for="sessionName">Session Name</label>
+                    <input type="text" id="sessionName" placeholder="e.g., February Training">
+                </div>
+
+                <div class="input-group">
+                    <label for="customCode">Session Code (6 characters, or auto-generate)</label>
+                    <input type="text" id="customCode" placeholder="Leave blank to auto-generate" maxlength="6">
+                </div>
+
+                <button class="btn" onclick="createSession()">Create Session</button>
+
+                <div id="newSessionDisplay" style="display: none; margin-top: 20px;">
+                    <h3 style="color: #2d7a1f; margin-bottom: 10px;">Session Created!</h3>
+                    <div class="session-code" id="newSessionCode">ABC123</div>
+                    <p style="text-align: center; color: #666;">Share this code with participants</p>
+                    
+                    <div class="qr-container">
+                        <p style="margin-bottom: 10px; font-weight: bold;">QR Code for Easy Access:</p>
+                        <div id="qrcode"></div>
+                        <p style="font-size: 14px; color: #666; margin-top: 10px;">
+                            Participants can scan to join
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card">
+                <h2>Quick Stats</h2>
+                <div style="text-align: center; padding: 20px;">
+                    <div style="margin-bottom: 30px;">
+                        <div style="font-size: 48px; font-weight: bold; color: #43b02a;" id="totalSessions">0</div>
+                        <div style="color: #666;">Total Sessions</div>
+                    </div>
+                    <div style="margin-bottom: 30px;">
+                        <div style="font-size: 48px; font-weight: bold; color: #43b02a;" id="activeSessions">0</div>
+                        <div style="color: #666;">Active Sessions</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 48px; font-weight: bold; color: #43b02a;" id="totalParticipants">0</div>
+                        <div style="color: #666;">Total Participants Today</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Sessions -->
+        <div class="card">
+            <h2>Active Sessions</h2>
+            <ul class="session-list" id="sessionList">
+                <li style="text-align: center; padding: 40px; color: #666;">
+                    No active sessions. Create one above!
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, get, onValue, push } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // REPLACE WITH YOUR FIREBASE CONFIG (same as multiplayer-game.html)
+        const firebaseConfig = {
+  apiKey: "AIzaSyDfCOOEqrrlqYWTGLrZ4enkNQLH-sXQLm8",
+  authDomain: "strategic-interviewing-game.firebaseapp.com",
+  databaseURL: "https://strategic-interviewing-game-default-rtdb.firebaseio.com",
+  projectId: "strategic-interviewing-game",
+  storageBucket: "strategic-interviewing-game.firebasestorage.app",
+  messagingSenderId: "898693932562",
+  appId: "1:898693932562:web:304d414ab6881748ec1acb"
+};
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Make functions global
+        window.createSession = createSession;
+        window.startSession = startSession;
+        window.deleteSession = deleteSession;
+        window.viewResults = viewResults;
+
+        // Generate random session code
+        function generateSessionCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Exclude confusing characters
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function createSession() {
+            const sessionName = document.getElementById('sessionName').value.trim();
+            let sessionCode = document.getElementById('customCode').value.toUpperCase().trim();
+            
+            if (!sessionCode) {
+                sessionCode = generateSessionCode();
+            }
+
+            if (sessionCode.length !== 6) {
+                alert('Session code must be exactly 6 characters');
+                return;
+            }
+
+            // Check if code already exists
+            get(ref(database, `sessions/${sessionCode}`)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    alert('This session code already exists. Choose a different one.');
+                    return;
+                }
+
+                // Create session
+                set(ref(database, `sessions/${sessionCode}`), {
+                    name: sessionName || 'Training Session',
+                    createdAt: Date.now(),
+                    started: false,
+                    participants: {}
+                }).then(() => {
+                    document.getElementById('successMessage').classList.add('show');
+                    document.getElementById('newSessionDisplay').style.display = 'block';
+                    document.getElementById('newSessionCode').textContent = sessionCode;
+                    
+                    // Generate QR code
+                    const gameURL = window.location.href.replace('facilitator-dashboard.html', 'multiplayer-game.html');
+                    document.getElementById('qrcode').innerHTML = '';
+                    new QRCode(document.getElementById('qrcode'), {
+                        text: gameURL,
+                        width: 200,
+                        height: 200
+                    });
+
+                    // Clear form
+                    document.getElementById('sessionName').value = '';
+                    document.getElementById('customCode').value = '';
+
+                    setTimeout(() => {
+                        document.getElementById('successMessage').classList.remove('show');
+                    }, 3000);
+                });
+            });
+        }
+
+        function startSession(code) {
+            if (confirm(`Start training for session ${code}? All participants will begin.`)) {
+                set(ref(database, `sessions/${code}/started`), true);
+            }
+        }
+
+        function deleteSession(code) {
+            if (confirm(`Delete session ${code}? This cannot be undone.`)) {
+                set(ref(database, `sessions/${code}`), null);
+            }
+        }
+
+        function viewResults(code) {
+            // Simple results view - could be enhanced
+            get(ref(database, `sessions/${code}/participants`)).then((snapshot) => {
+                const participants = snapshot.val() || {};
+                const count = Object.keys(participants).length;
+                const scores = Object.values(participants).map(p => p.score || 0);
+                const avg = scores.length > 0 ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : 0;
+                
+                alert(`Session ${code} Results:\n\nParticipants: ${count}\nAverage Score: ${avg}/8`);
+            });
+        }
+
+        // Load sessions
+        function loadSessions() {
+            onValue(ref(database, 'sessions'), (snapshot) => {
+                const sessions = snapshot.val() || {};
+                const sessionList = document.getElementById('sessionList');
+                
+                if (Object.keys(sessions).length === 0) {
+                    sessionList.innerHTML = '<li style="text-align: center; padding: 40px; color: #666;">No active sessions. Create one above!</li>';
+                    document.getElementById('totalSessions').textContent = '0';
+                    document.getElementById('activeSessions').textContent = '0';
+                    document.getElementById('totalParticipants').textContent = '0';
+                    return;
+                }
+
+                let html = '';
+                let activeCount = 0;
+                let totalParticipants = 0;
+
+                Object.entries(sessions).forEach(([code, session]) => {
+                    const participantCount = Object.keys(session.participants || {}).length;
+                    totalParticipants += participantCount;
+                    
+                    const status = session.started ? 'active' : 'waiting';
+                    if (session.started) activeCount++;
+
+                    const statusText = session.started ? 'In Progress' : 'Waiting';
+                    const statusClass = session.started ? 'status-active' : 'status-waiting';
+
+                    html += `
+                        <li class="session-item">
+                            <div class="session-info">
+                                <h3>
+                                    ${code}
+                                    <span class="status-badge ${statusClass}">${statusText}</span>
+                                    <span class="participant-count">${participantCount} joined</span>
+                                </h3>
+                                <p>${session.name} • Created ${new Date(session.createdAt).toLocaleString()}</p>
+                            </div>
+                            <div class="session-actions">
+                                ${!session.started ? `<button class="btn" onclick="startSession('${code}')">Start</button>` : ''}
+                                <button class="btn" onclick="viewResults('${code}')">Results</button>
+                                <button class="btn btn-danger" onclick="deleteSession('${code}')">Delete</button>
+                            </div>
+                        </li>
+                    `;
+                });
+
+                sessionList.innerHTML = html;
+                document.getElementById('totalSessions').textContent = Object.keys(sessions).length;
+                document.getElementById('activeSessions').textContent = activeCount;
+                document.getElementById('totalParticipants').textContent = totalParticipants;
+            });
+        }
+
+        // Initialize
+        loadSessions();
+    </script>
 </body>
 </html>
