@@ -370,10 +370,10 @@
                 document.getElementById('createdCode').textContent = sessionCode;
                 document.getElementById('qrDisplay').classList.add('show');
                 
-                // Generate QR code using Google Charts API (more reliable)
+                // Generate QR code using QR Server API (very reliable)
                 const qrcodeDiv = document.getElementById('qrcode');
                 const gameURL = 'https://buko833.github.io/Strategic-Interviewing/';
-                qrcodeDiv.innerHTML = `<img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(gameURL)}" alt="QR Code" style="border: 4px solid #43b02a; border-radius: 10px;">`;
+                qrcodeDiv.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(gameURL)}" alt="Scan to Join" style="border: 4px solid #43b02a; border-radius: 10px; background: white; padding: 10px;">`;
                 
                 setTimeout(() => {
                     document.getElementById('successMessage').classList.remove('show');
