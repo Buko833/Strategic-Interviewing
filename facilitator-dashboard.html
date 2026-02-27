@@ -214,6 +214,36 @@
         .recommend strong {
             color: #856404;
         }
+        .qr-display {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+            border: 3px solid #43b02a;
+            display: none;
+        }
+        .qr-display.show {
+            display: block;
+        }
+        .qr-display h3 {
+            color: #2d7a1f;
+            margin-bottom: 15px;
+        }
+        .session-code-big {
+            background: #43b02a;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            margin: 20px 0;
+        }
+        #qrcode {
+            margin: 20px auto;
+            display: inline-block;
+        }
         @media (max-width: 768px) {
             .stats-grid {
                 grid-template-columns: 1fr;
@@ -252,6 +282,20 @@
             <button class="btn" onclick="createSession()">Create Session</button>
 
             <div id="error" style="display: none; margin-top: 15px;" class="error"></div>
+
+            <!-- QR Code Display -->
+            <div class="qr-display" id="qrDisplay">
+                <h3>✅ Session Created!</h3>
+                <div class="session-code-big" id="createdCode">ABC123</div>
+                <p style="color: #666; margin: 15px 0;">Share this code with participants</p>
+                
+                <div id="qrcode"></div>
+                
+                <p style="color: #666; font-size: 14px; margin-top: 15px;">
+                    Participants scan this QR code or visit:<br>
+                    <strong>buko833.github.io/Strategic-Interviewing</strong>
+                </p>
+            </div>
         </div>
 
         <div class="card">
@@ -273,6 +317,9 @@
             </div>
         </div>
     </div>
+
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -321,6 +368,19 @@
                 document.getElementById('successMessage').classList.add('show');
                 document.getElementById('sessionName').value = '';
                 document.getElementById('customCode').value = '';
+                
+                // Show QR Code
+                document.getElementById('createdCode').textContent = sessionCode;
+                document.getElementById('qrDisplay').classList.add('show');
+                
+                // Generate QR code
+                const qrcodeDiv = document.getElementById('qrcode');
+                qrcodeDiv.innerHTML = ''; // Clear previous QR code
+                new QRCode(qrcodeDiv, {
+                    text: 'https://buko833.github.io/Strategic-Interviewing/',
+                    width: 200,
+                    height: 200
+                });
                 
                 setTimeout(() => {
                     document.getElementById('successMessage').classList.remove('show');
