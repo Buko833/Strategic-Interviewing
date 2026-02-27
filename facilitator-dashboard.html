@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+DX5XUD<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -307,8 +307,7 @@
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getDatabase, ref, set, get, onValue, push } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
-        // REPLACE WITH YOUR FIREBASE CONFIG (same as multiplayer-game.html)
-        const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyDfCOOEqrrlqYWTGLrZ4enkNQLH-sXQLm8",
   authDomain: "strategic-interviewing-game.firebaseapp.com",
   databaseURL: "https://strategic-interviewing-game-default-rtdb.firebaseio.com",
@@ -368,14 +367,14 @@
                     document.getElementById('newSessionDisplay').style.display = 'block';
                     document.getElementById('newSessionCode').textContent = sessionCode;
                     
-                    // Generate QR code
-                    const gameURL = window.location.href.replace('facilitator-dashboard.html', 'multiplayer-game.html');
-                    document.getElementById('qrcode').innerHTML = '';
-                    new QRCode(document.getElementById('qrcode'), {
-                        text: gameURL,
-                        width: 200,
-                        height: 200
-                    });
+                   // Generate QR code
+const gameURL = window.location.href.replace('facilitator-dashboard.html', '');
+document.getElementById('qrcode').innerHTML = '';
+new QRCode(document.getElementById('qrcode'), {
+    text: gameURL,
+    width: 200,
+    height: 200
+});
 
                     // Clear form
                     document.getElementById('sessionName').value = '';
